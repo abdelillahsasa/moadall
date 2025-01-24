@@ -195,3 +195,64 @@ input[type="text"]:focus {
   font-weight: bold;
   margin-top: 40px;
 }
+/* إضافة تحسينات على الجداول */
+.table-container {
+  overflow-x: auto; /* تمكين التمرير الأفقي */
+}
+
+/* تحسين النصوص والعناصر */
+body {
+  font-size: 16px; /* تعيين حجم النص الأساسي */
+}
+
+/* تحسين التصميم للهواتف المحمولة */
+@media (max-width: 768px) {
+  .header {
+    font-size: 22px; /* تقليل حجم النص في العنوان */
+    padding: 15px; /* تقليل الحواف */
+  }
+
+  .tabs {
+    flex-direction: column; /* عرض الأزرار بشكل عمودي */
+  }
+
+  .tabs button {
+    padding: 10px; /* تقليل الحواف */
+    margin-bottom: 10px; /* إضافة مسافة بين الأزرار */
+  }
+
+  .content {
+    padding: 15px; /* تقليل المساحة الداخلية */
+  }
+
+  .table th, .table td {
+    padding: 8px 10px; /* تقليل المسافات في الجدول */
+    font-size: 12px; /* تقليل حجم النص في الجدول */
+  }
+
+  input[type="text"] {
+    padding: 8px; /* تقليل المساحة الداخلية للحقل */
+    font-size: 14px; /* تقليل حجم النص داخل الحقل */
+  }
+}
+
+/* تحسين للهواتف الأصغر (الشاشات أقل من 480px) */
+@media (max-width: 480px) {
+  .header {
+    font-size: 18px; /* تصغير العنوان بشكل أكبر */
+  }
+
+  .tabs button {
+    font-size: 12px; /* تصغير حجم النص في الأزرار */
+    padding: 8px; /* تصغير الحواف */
+  }
+
+  .content {
+    padding: 10px; /* تقليل الهوامش */
+  }
+
+  .table th, .table td {
+    font-size: 10px; /* تصغير النصوص */
+    padding: 5px; /* تقليل المسافات الداخلية */
+  }
+}
