@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SASA ABDEL ILLAH</title>
+	<script type="text/javascript" src="js.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    .header {
+      background-color: #00a651;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #e5e5e5;
+      padding: 10px 0;
+    }
+
+    .tabs button {
+      background-color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tabs button.active {
+      background-color: #00a651;
+      color: white;
+    }
+
+    .content {
+      margin: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      background-color: #f5f5f5;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+      background-color: #f5f5f5;
+      font-size: 14px;
+    }
+
+    .table td {
+      font-size: 14px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    .frozen {
+      background-color: #e5e5e5; /* لون لخانة TD المجمّدة */
+      cursor: not-allowed; /* تغيير المؤشر عند محاولة التعديل */
+    }
+
+    .average-row td {
+      font-weight: bold;
+      text-align: right;
+      background-color: #f0f0f0;
+    }
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css">
+<script>
+    let totalResult = 0;
+
+    function validateInput(event) {
+      const input = event.target;
+      const value = parseFloat(input.value);
+      if (isNaN(value) || value < 0 || value > 20) {
+        input.value = '';
+        alert('Please enter a number between 0 and 20.');
+      } else {
+        calculateResult(input);
+      }
+    }
+
+    function calculateResult(input) {
+      const row = input.closest('tr');
+      const tdInput = parseFloat(row.querySelector('td:nth-child(3) input')?.value) || 0; // أخذ قيمة TD
+      const examInput = parseFloat(row.querySelector('td:nth-child(4) input').value) || 0; // أخذ قيمة الامتحان
+      const coefficient = parseFloat(row.querySelector('td:nth-child(2)').textContent);
+
+      let result = 0;
+      let total = 0;
+
+      // إذا كانت المادة "الإعلام الآلي" أو "مدخل لادارة الاعمال"، نعرض العلامة مباشرة في خانة النتيجة
+      if (row.querySelector('td:nth-child(1)').textContent.includes("الإعلام الآلي") || row.querySelector('td:nth-child(1)').textContent.includes("مدخل لادارة الاعمال")) {
+        total = examInput; // لا نعرض خانة TD ونحسب النتيجة بناءً على الامتحان فقط
+      } else {
+        // في باقي المواد نقوم بحساب المجموع المعدل
+        const weightedTd = tdInput * 0.4; // ضرب TD في 0.4
+        const weightedExam = examInput * 0.6; // ضرب الامتحان في 0.6
+        total = weightedTd + weightedExam; // حساب المجموع
+      }
+
+      row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); // عرض المجموع في العمود الجديد
+
+      // حساب النتيجة بضرب المجموع في المعامل
+      result = total * coefficient;
+      row.querySelector('td:nth-child(6)').textContent = result.toFixed(2); // عرض النتيجة في العمود الأخير
+
+      // تحديث المعدل النهائي
+      updateAverage();
+    }
+
+    function updateAverage() {
+      let sumOfResults = 0;
+      const rows = document.querySelectorAll('tr');
+      rows.forEach(row => {
+        const totalCell = row.querySelector('td:nth-child(6)'); // الحصول على خانة المجموع
+        if (totalCell && totalCell.textContent) {
+          sumOfResults += parseFloat(totalCell.textContent);
+        }
+      });
+
+      // حساب المعدل النهائي
+      const average = sumOfResults / 17; // قسمنا المجموع على 17
+      const averageCell = document.getElementById('average-cell');
+      averageCell.textContent = `المعدل النهائي: ${average.toFixed(2)}`;
+    }
+
+    window.onload = function () {
+      // حذف خانة TD للمادتين الإعلام الآلي و مدخل لادارة الاعمال
+      const rows = document.querySelectorAll('tr');
+      rows.forEach(row => {
+        const subject = row.querySelector('td:nth-child(1)').textContent;
+        if (subject.includes('الإعلام الآلي') || subject.includes('مدخل لادارة الاعمال')) {
+          row.querySelector('td:nth-child(3)').innerHTML = ''; // إزالة خانة TD
+        }
+      });
+    };
+  </script>
+</head>
+<body>
+
+<div class="header"> قسم العلوم المالية والمحاسبية كلية العلوم الاقتصادية</div>
+
+<div class="tabs">
+  <button class="active">Semestre 1</button>
+  <button>Semestre 2</button>
+</div>
+
+<div class="content">
+  <div class="content-header">
+    <span>دورة عادية</span>
+ 
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>المقياس</th>
+        <th>المعامل</th>
+        <th>TD</th>
+        <th>الامتحان</th>
+        <th>النتيجة</th>
+        <th>المجموع</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>محاسبة تحليلية</td>
+        <td>3</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>اقتصاد كلي 1</td>
+        <td>2</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>مالية عمومية</td>
+        <td>2</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>اقتصاد نقدي&nbsp;</td>
+        <td>2</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>احصاء 3</td>
+        <td>2</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>رياضيات مايلة</td>
+        <td>2</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>مدخل لادارة الاعمال</td>
+        <td>1</td>
+        <td></td> <!-- تم حذف خانة TD هنا -->
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>منهجية</td>
+        <td>2</td>
+        <td><input type="text" placeholder="Enter TD" oninput="validateInput(event)"></td>
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>الإعلام الآلي 2</td>
+        <td>1</td>
+        <td></td> <!-- تم حذف خانة TD هنا -->
+        <td><input type="text" placeholder="Enter Exam" oninput="validateInput(event)"></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- صف المعدل -->
+  <table class="table">
+    <tbody>
+      <tr class="average-row">
+        <td colspan="6" id="average-cell">المعدل النهائي: 0</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+	<div class="footer">
+  <p>ساسة عبد الإله</p>
+</div>
+
+</body>
+</html>
