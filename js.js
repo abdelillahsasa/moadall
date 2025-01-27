@@ -1,11 +1,13 @@
+ let totalResult = 0;
+
 function validateInput(event) {
   const input = event.target;
   const value = parseFloat(input.value);
 
   // إذا كان الحقل فارغًا، لا تقم بأي عملية
   if (input.value === "") {
+    // إعادة تعيين اللون عند حذف القيمة
     resetColor(input);
-    resetResult(input); // إعادة تعيين النتيجة إلى فارغ
     return;
   }
 
@@ -27,12 +29,6 @@ function calculateResult(input) {
   let result = 0;
   let total = 0;
 
-  // إذا كانت الحقول فارغة (TD أو الامتحان)
-  if (tdInput === 0 && examInput === 0) {
-    resetResult(input); // إعادة تعيين النتيجة إلى فارغ إذا كانت الحقول فارغة
-    return;
-  }
-
   // إذا كانت المادة "الإعلام الآلي" أو "مدخل لادارة الاعمال"، نعرض العلامة مباشرة في خانة النتيجة
   if (row.querySelector('td:nth-child(1)').textContent.includes("الإعلام الآلي") || row.querySelector('td:nth-child(1)').textContent.includes("مدخل لادارة الاعمال")) {
     total = examInput; // لا نعرض خانة TD ونحسب النتيجة بناءً على الامتحان فقط
@@ -43,8 +39,7 @@ function calculateResult(input) {
     total = weightedTd + weightedExam; // حساب المجموع
   }
 
-  // عرض المجموع في العمود الجديد
-  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); 
+  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); // عرض المجموع في العمود الجديد
 
   // حساب النتيجة بضرب المجموع في المعامل
   result = total * coefficient;
@@ -58,12 +53,6 @@ function calculateResult(input) {
 
   // تحديث المعدل النهائي
   updateAverage();
-}
-
-function resetResult(input) {
-  const row = input.closest('tr');
-  row.querySelector('td:nth-child(5)').textContent = ''; // إعادة تعيين المجموع إلى فارغ
-  row.querySelector('td:nth-child(6)').textContent = ''; // إعادة تعيين النتيجة إلى فارغ
 }
 
 function updateColor(row, tdInput, examInput) {
@@ -122,7 +111,7 @@ function updateAverage() {
   // حساب المعدل النهائي
   const average = sumOfResults / 17; // قسمنا المجموع على 17
   const averageCell = document.getElementById('average-cell');
-  averageCell.textContent = `المعدل النهائي: ${average.toFixed(2)}`;
+  averageCell.textContent = المعدل النهائي: ${average.toFixed(2)};
 
   // تحديث لون المعدل النهائي بناءً على قيمته
   if (average >= 10) {
