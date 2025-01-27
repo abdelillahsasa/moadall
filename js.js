@@ -8,6 +8,7 @@ function validateInput(event) {
   if (input.value === "") {
     // إعادة تعيين اللون عند حذف القيمة
     resetColor(input);
+    resetResult(input);  // إضافة هذه الدالة لإعادة تعيين النتيجة إلى صفر
     return;
   }
 
@@ -39,7 +40,8 @@ function calculateResult(input) {
     total = weightedTd + weightedExam; // حساب المجموع
   }
 
-  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); // عرض المجموع في العمود الجديد
+  // عرض المجموع في العمود الجديد
+  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); 
 
   // حساب النتيجة بضرب المجموع في المعامل
   result = total * coefficient;
@@ -53,6 +55,12 @@ function calculateResult(input) {
 
   // تحديث المعدل النهائي
   updateAverage();
+}
+
+function resetResult(input) {
+  const row = input.closest('tr');
+  row.querySelector('td:nth-child(5)').textContent = ''; // إعادة تعيين المجموع إلى فارغ
+  row.querySelector('td:nth-child(6)').textContent = ''; // إعادة تعيين النتيجة إلى فارغ
 }
 
 function updateColor(row, tdInput, examInput) {
