@@ -4,10 +4,9 @@ function validateInput(event) {
   const input = event.target;
   const value = parseFloat(input.value);
 
-  // إذا كان الحقل فارغًا، لا تقم بأي عملية وأعد تعيين النتيجة إلى 0
+  // إذا كان الحقل فارغًا، يتم التحقق من الحقول الأخرى
   if (input.value === "") {
-    resetColor(input);
-    resetResult(input); // إعادة تعيين النتيجة إلى 0
+    resetResultIfBothEmpty(input); // إعادة النتيجة إذا كانت جميع الحقول فارغة
     updateAverage(); // تحديث المعدل النهائي
     return;
   }
@@ -27,97 +26,70 @@ function calculateResult(input) {
   const examInput = parseFloat(row.querySelector('td:nth-child(4) input').value) || 0; // أخذ قيمة الامتحان
   const coefficient = parseFloat(row.querySelector('td:nth-child(2)').textContent);
 
-  let result = 0;
   let total = 0;
 
-  // إذا كانت الحقول فارغة (TD أو الامتحان)
-  if (tdInput === 0 && examInput === 0) {
-    resetResult(input); // إعادة تعيين النتيجة إلى فارغ إذا كانت الحقول فارغة
-    updateAverage(); // تحديث المعدل النهائي
-    return;
-  }
-
-  // إذا كانت المادة "الإعلام الآلي" أو "مدخل لادارة الاعمال"، نعرض العلامة مباشرة في خانة النتيجة
+  // إذا كانت المادة "الإعلام الآلي" أو "مدخل لادارة الاعمال"، يتم حساب المجموع بناءً على الامتحان فقط
   if (row.querySelector('td:nth-child(1)').textContent.includes("الإعلام الآلي") || row.querySelector('td:nth-child(1)').textContent.includes("مدخل لادارة الاعمال")) {
-    total = examInput; // لا نعرض خانة TD ونحسب النتيجة بناءً على الامتحان فقط
+    total = examInput; // لا يتم عرض خانة TD
   } else {
-    // في باقي المواد نقوم بحساب المجموع المعدل
+    // حساب المجموع المعدل في باقي المواد
     const weightedTd = tdInput * 0.4; // ضرب TD في 0.4
     const weightedExam = examInput * 0.6; // ضرب الامتحان في 0.6
     total = weightedTd + weightedExam; // حساب المجموع
   }
 
   // عرض المجموع في العمود الجديد
-  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); 
+  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2);
 
   // حساب النتيجة بضرب المجموع في المعامل
-  result = total * coefficient;
+  const result = total * coefficient;
   row.querySelector('td:nth-child(6)').textContent = result.toFixed(2); // عرض النتيجة في العمود الأخير
 
-  // تحقق من ملء الحقول قبل تغيير اللون
-  if (tdInput > 0 && examInput > 0) {
-    // تحديث اللون بناءً على TD و Exam
-    updateColor(row, tdInput, examInput);
-  }
+  // تحديث اللون بناءً على الحاصل بين TD والامتحان
+  updateColor(row);
 
   // تحديث المعدل النهائي
   updateAverage();
 }
 
-function resetResult(input) {
+function resetResultIfBothEmpty(input) {
   const row = input.closest('tr');
-  row.querySelector('td:nth-child(5)').textContent = ''; // إعادة تعيين المجموع إلى فارغ
-  row.querySelector('td:nth-child(6)').textContent = ''; // إعادة تعيين النتيجة إلى فارغ
-}
+  const tdInput = row.querySelector('td:nth-child(3) input')?.value || ""; // قيمة TD
+  const examInput = row.querySelector('td:nth-child(4) input')?.value || ""; // قيمة الامتحان
 
-function updateColor(row, tdInput, examInput) {
-  const resultCell = row.querySelector('td:nth-child(6)');
-  const totalCell = row.querySelector('td:nth-child(5)');
-  const subjectName = row.querySelector('td:nth-child(1)').textContent;
-
-  // التحقق إذا كانت المادة إعلام آلي أو مدخل لادارة الأعمال
-  if (subjectName.includes("الإعلام الآلي") || subjectName.includes("مدخل لادارة الاعمال")) {
-    // التحقق من الامتحان فقط في هذه المواد
-    if (examInput >= 10) {
-      resultCell.style.color = 'green';
-      totalCell.style.color = 'green';
-    } else if (examInput <= 9.99) {
-      resultCell.style.color = 'red';
-      totalCell.style.color = 'red';
-    } else {
-      resultCell.style.color = '';
-      totalCell.style.color = '';
-    }
+  if (tdInput === "" && examInput === "") {
+    // إذا كانت القيمتان فارغتين، يتم تعيين النتيجة إلى فارغة
+    row.querySelector('td:nth-child(5)').textContent = ''; // مسح المجموع
+    row.querySelector('td:nth-child(6)').textContent = ''; // مسح النتيجة
   } else {
-    // في باقي المواد نتحقق من TD و Exam
-    if (tdInput >= 10 && examInput >= 10) {
-      resultCell.style.color = 'green';
-      totalCell.style.color = 'green';
-    } else if (tdInput <= 9.99 || examInput <= 9.99) {
-      resultCell.style.color = 'red';
-      totalCell.style.color = 'red';
-    } else {
-      resultCell.style.color = '';
-      totalCell.style.color = '';
-    }
+    // إذا كانت إحدى القيم موجودة، يتم حساب النتيجة
+    calculateResult(input);
   }
 }
 
-function resetColor(input) {
-  const row = input.closest('tr');
-  const resultCell = row.querySelector('td:nth-child(6)');
-  const totalCell = row.querySelector('td:nth-child(5)');
+function updateColor(row) {
+  const totalCell = row.querySelector('td:nth-child(5)'); // عمود المجموع
+  const resultCell = row.querySelector('td:nth-child(6)'); // عمود النتيجة
+  const totalValue = parseFloat(totalCell.textContent) || 0;
 
-  // إعادة تعيين اللون إلى اللون الافتراضي (عادةً الأسود أو بدون لون)
-  resultCell.style.color = '';
-  totalCell.style.color = '';
+  // تغيير لون عمود المجموع وعمود النتيجة بناءً على الحاصل
+  if (totalValue >= 10) {
+    totalCell.style.color = 'green'; // إذا كان الحاصل 10 أو أكثر، يصبح اللون أخضر
+    resultCell.style.color = 'green';
+  } else if (totalValue <= 9.99) {
+    totalCell.style.color = 'red'; // إذا كان الحاصل أقل من 10، يصبح اللون أحمر
+    resultCell.style.color = 'red';
+  } else {
+    totalCell.style.color = ''; // إعادة اللون الافتراضي (بدون لون)
+    resultCell.style.color = '';
+  }
 }
 
 function updateAverage() {
   let sumOfResults = 0;
   const rows = document.querySelectorAll('tr');
   rows.forEach(row => {
-    const totalCell = row.querySelector('td:nth-child(6)'); // الحصول على خانة المجموع
+    const totalCell = row.querySelector('td:nth-child(6)'); // الحصول على خانة النتيجة
     if (totalCell && totalCell.textContent) {
       sumOfResults += parseFloat(totalCell.textContent);
     }
@@ -131,7 +103,7 @@ function updateAverage() {
   // تحديث لون المعدل النهائي بناءً على قيمته
   if (average >= 10) {
     averageCell.style.color = 'green'; // الأخضر إذا كان المعدل 10 أو أكثر
-  } else if (average <= 9.99) {
+  } else {
     averageCell.style.color = 'red'; // الأحمر إذا كان المعدل أقل من 10
   }
 }
@@ -146,3 +118,4 @@ window.onload = function () {
     }
   });
 };
+
