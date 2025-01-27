@@ -1,14 +1,11 @@
-let totalResult = 0;
-
 function validateInput(event) {
   const input = event.target;
   const value = parseFloat(input.value);
 
   // إذا كان الحقل فارغًا، لا تقم بأي عملية
   if (input.value === "") {
-    // إعادة تعيين اللون عند حذف القيمة
     resetColor(input);
-    resetResult(input);  // إضافة هذه الدالة لإعادة تعيين النتيجة إلى صفر
+    resetResult(input); // إعادة تعيين النتيجة إلى فارغ
     return;
   }
 
@@ -29,6 +26,12 @@ function calculateResult(input) {
 
   let result = 0;
   let total = 0;
+
+  // إذا كانت الحقول فارغة (TD أو الامتحان)
+  if (tdInput === 0 && examInput === 0) {
+    resetResult(input); // إعادة تعيين النتيجة إلى فارغ إذا كانت الحقول فارغة
+    return;
+  }
 
   // إذا كانت المادة "الإعلام الآلي" أو "مدخل لادارة الاعمال"، نعرض العلامة مباشرة في خانة النتيجة
   if (row.querySelector('td:nth-child(1)').textContent.includes("الإعلام الآلي") || row.querySelector('td:nth-child(1)').textContent.includes("مدخل لادارة الاعمال")) {
