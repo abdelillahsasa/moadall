@@ -78,10 +78,17 @@ body {
   margin-bottom: 30px;
 }
 
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* لضمان التمرير الأفقي في الشاشات الصغيرة */
+  -webkit-overflow-scrolling: touch; /* تحسين التمرير على الأجهزة التي تعمل باللمس */
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 30px;
+  table-layout: fixed; /* تحديد عرض الأعمدة بشكل ثابت */
 }
 
 .table th, .table td {
@@ -89,6 +96,7 @@ body {
   text-align: left;
   font-size: 15px;
   border-bottom: 1px solid #ddd;
+  word-wrap: break-word; /* لضمان أن النصوص الطويلة ستنقسم بشكل صحيح */
 }
 
 .table th {
@@ -102,7 +110,7 @@ body {
   color: #666;
 }
 
-input[type="text"] {
+input[type="number"] {
   width: 100%;
   padding: 12px;
   margin-top: 5px;
@@ -111,11 +119,19 @@ input[type="text"] {
   border: 1px solid #ccc;
   font-size: 14px;
   transition: border-color 0.3s ease;
+  appearance: none; /* لإخفاء شريط التمرير في المتصفحات التي تدعمه */
+  -moz-appearance: textfield; /* إخفاء شريط التمرير في Firefox */
 }
 
-input[type="text"]:focus {
+input[type="number"]:focus {
   border-color: #4CAF50;
   outline: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Frozen TD */
@@ -143,22 +159,21 @@ input[type="text"]:focus {
   color: #00796b;
 }
 
-/* Colors for results */
-.result-low {
-  color: red; /* إذا كانت النتيجة تحت 10 */
+/* Footer Style */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-top: 30px;
 }
 
-.result-high {
-  color: green; /* إذا كانت النتيجة 10 أو أعلى */
+.footer a {
+  color: #4CAF50;
+  text-decoration: none;
 }
 
-/* Dynamic styling based on final average */
-.final-average-low {
-  color: red;
-}
-
-.final-average-high {
-  color: green;
+.footer a:hover {
+  text-decoration: underline;
 }
 
 /* Responsive Design */
@@ -168,9 +183,14 @@ input[type="text"]:focus {
     padding: 20px;
   }
 
+  .tabs {
+    flex-direction: column; /* عرض الأزرار بشكل عمودي */
+  }
+
   .tabs button {
     padding: 10px 20px;
     font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .content {
@@ -180,79 +200,69 @@ input[type="text"]:focus {
 
   .table th, .table td {
     padding: 10px 12px;
+    font-size: 12px;
   }
 
-  input[type="text"] {
+  input[type="number"] {
     padding: 10px;
-  }
-}
-.footer {
-  background-color: #00a651;
-  color: white;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 40px;
-}
-/* إضافة تحسينات على الجداول */
-.table-container {
-  overflow-x: auto; /* تمكين التمرير الأفقي */
-}
-
-/* تحسين النصوص والعناصر */
-body {
-  font-size: 16px; /* تعيين حجم النص الأساسي */
-}
-
-/* تحسين التصميم للهواتف المحمولة */
-@media (max-width: 768px) {
-  .header {
-    font-size: 22px; /* تقليل حجم النص في العنوان */
-    padding: 15px; /* تقليل الحواف */
+    font-size: 14px;
   }
 
-  .tabs {
-    flex-direction: column; /* عرض الأزرار بشكل عمودي */
-  }
-
-  .tabs button {
-    padding: 10px; /* تقليل الحواف */
-    margin-bottom: 10px; /* إضافة مسافة بين الأزرار */
-  }
-
-  .content {
-    padding: 15px; /* تقليل المساحة الداخلية */
-  }
-
-  .table th, .table td {
-    padding: 8px 10px; /* تقليل المسافات في الجدول */
-    font-size: 12px; /* تقليل حجم النص في الجدول */
-  }
-
-  input[type="text"] {
-    padding: 8px; /* تقليل المساحة الداخلية للحقل */
-    font-size: 14px; /* تقليل حجم النص داخل الحقل */
+  .table-container {
+    overflow-x: auto;
   }
 }
 
-/* تحسين للهواتف الأصغر (الشاشات أقل من 480px) */
 @media (max-width: 480px) {
   .header {
-    font-size: 18px; /* تصغير العنوان بشكل أكبر */
+    font-size: 18px;
   }
 
   .tabs button {
-    font-size: 12px; /* تصغير حجم النص في الأزرار */
-    padding: 8px; /* تصغير الحواف */
+    font-size: 12px;
+    padding: 8px;
   }
 
   .content {
-    padding: 10px; /* تقليل الهوامش */
+    padding: 10px;
   }
 
   .table th, .table td {
-    font-size: 10px; /* تصغير النصوص */
-    padding: 5px; /* تقليل المسافات الداخلية */
+    font-size: 10px;
+    padding: 5px;
+  }
+
+  input[type="number"] {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 320px) {
+  .header {
+    font-size: 16px;
+  }
+
+  .tabs button {
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+
+  .content {
+    padding: 8px;
+  }
+
+  .table th, .table td {
+    font-size: 8px;
+    padding: 3px;
+  }
+
+  input[type="number"] {
+    font-size: 10px;
+    padding: 6px;
+  }
+
+  .table-container {
+    overflow-x: auto;
   }
 }
