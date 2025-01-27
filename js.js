@@ -1,14 +1,14 @@
-
 let totalResult = 0;
 
 function validateInput(event) {
   const input = event.target;
   const value = parseFloat(input.value);
 
-  // إذا كان الحقل فارغًا، لا تقم بأي عملية
+  // إذا كان الحقل فارغًا، لا تقم بأي عملية وأعد تعيين النتيجة إلى 0
   if (input.value === "") {
     resetColor(input);
-    resetResult(input); // إعادة تعيين النتيجة إلى فارغ
+    resetResult(input); // إعادة تعيين النتيجة إلى 0
+    updateAverage(); // تحديث المعدل النهائي
     return;
   }
 
@@ -33,6 +33,7 @@ function calculateResult(input) {
   // إذا كانت الحقول فارغة (TD أو الامتحان)
   if (tdInput === 0 && examInput === 0) {
     resetResult(input); // إعادة تعيين النتيجة إلى فارغ إذا كانت الحقول فارغة
+    updateAverage(); // تحديث المعدل النهائي
     return;
   }
 
