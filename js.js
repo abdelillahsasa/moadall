@@ -1,4 +1,4 @@
- let totalResult = 0;
+let totalResult = 0;
 
 function validateInput(event) {
   const input = event.target;
