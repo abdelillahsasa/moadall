@@ -6,6 +6,8 @@ function validateInput(event) {
 
   // إذا كان الحقل فارغًا، لا تقم بأي عملية
   if (input.value === "") {
+    // إعادة تعيين اللون عند حذف القيمة
+    resetColor(input);
     return;
   }
 
@@ -43,8 +45,57 @@ function calculateResult(input) {
   result = total * coefficient;
   row.querySelector('td:nth-child(6)').textContent = result.toFixed(2); // عرض النتيجة في العمود الأخير
 
+  // تحقق من ملء الحقول قبل تغيير اللون
+  if (tdInput > 0 && examInput > 0) {
+    // تحديث اللون بناءً على TD و Exam
+    updateColor(row, tdInput, examInput);
+  }
+
   // تحديث المعدل النهائي
   updateAverage();
+}
+
+function updateColor(row, tdInput, examInput) {
+  const resultCell = row.querySelector('td:nth-child(6)');
+  const totalCell = row.querySelector('td:nth-child(5)');
+  const subjectName = row.querySelector('td:nth-child(1)').textContent;
+
+  // التحقق إذا كانت المادة إعلام آلي أو مدخل لادارة الأعمال
+  if (subjectName.includes("الإعلام الآلي") || subjectName.includes("مدخل لادارة الاعمال")) {
+    // التحقق من الامتحان فقط في هذه المواد
+    if (examInput >= 10) {
+      resultCell.style.color = 'green';
+      totalCell.style.color = 'green';
+    } else if (examInput <= 9.99) {
+      resultCell.style.color = 'red';
+      totalCell.style.color = 'red';
+    } else {
+      resultCell.style.color = '';
+      totalCell.style.color = '';
+    }
+  } else {
+    // في باقي المواد نتحقق من TD و Exam
+    if (tdInput >= 10 && examInput >= 10) {
+      resultCell.style.color = 'green';
+      totalCell.style.color = 'green';
+    } else if (tdInput <= 9.99 || examInput <= 9.99) {
+      resultCell.style.color = 'red';
+      totalCell.style.color = 'red';
+    } else {
+      resultCell.style.color = '';
+      totalCell.style.color = '';
+    }
+  }
+}
+
+function resetColor(input) {
+  const row = input.closest('tr');
+  const resultCell = row.querySelector('td:nth-child(6)');
+  const totalCell = row.querySelector('td:nth-child(5)');
+
+  // إعادة تعيين اللون إلى اللون الافتراضي (عادةً الأسود أو بدون لون)
+  resultCell.style.color = '';
+  totalCell.style.color = '';
 }
 
 function updateAverage() {
@@ -61,6 +112,13 @@ function updateAverage() {
   const average = sumOfResults / 17; // قسمنا المجموع على 17
   const averageCell = document.getElementById('average-cell');
   averageCell.textContent = `المعدل النهائي: ${average.toFixed(2)}`;
+
+  // تحديث لون المعدل النهائي بناءً على قيمته
+  if (average >= 10) {
+    averageCell.style.color = 'green'; // الأخضر إذا كان المعدل 10 أو أكثر
+  } else if (average <= 9.99) {
+    averageCell.style.color = 'red'; // الأحمر إذا كان المعدل أقل من 10
+  }
 }
 
 window.onload = function () {
