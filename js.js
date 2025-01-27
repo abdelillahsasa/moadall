@@ -1,36 +1,49 @@
-// J/* Reset basic styles */
+let totalResult = 0;
+
+function validateInput(event) {
+  const input = event.target;
+  const value = parseFloat(input.value);
+
+  // إذا كان الحقل فارغًا، لا تقم بأي عملية
+  if (input.value === "") {
+    return;
+  }
+
+  // التحقق من صحة الرقم المدخل
+  if (isNaN(value) || value < 0 || value > 20) {
+    input.value = '';
+    alert('Please enter a number between 0 and 20.');
+  } else {
+    calculateResult(input);
+  }
+}
+
 function calculateResult(input) {
   const row = input.closest('tr');
-  const tdInput = parseFloat(row.querySelector('td:nth-child(3) input')?.value) || 0;
-  const examInput = parseFloat(row.querySelector('td:nth-child(4) input').value) || 0;
+  const tdInput = parseFloat(row.querySelector('td:nth-child(3) input')?.value) || 0; // أخذ قيمة TD
+  const examInput = parseFloat(row.querySelector('td:nth-child(4) input').value) || 0; // أخذ قيمة الامتحان
   const coefficient = parseFloat(row.querySelector('td:nth-child(2)').textContent);
 
   let result = 0;
   let total = 0;
 
+  // إذا كانت المادة "الإعلام الآلي" أو "مدخل لادارة الاعمال"، نعرض العلامة مباشرة في خانة النتيجة
   if (row.querySelector('td:nth-child(1)').textContent.includes("الإعلام الآلي") || row.querySelector('td:nth-child(1)').textContent.includes("مدخل لادارة الاعمال")) {
-    total = examInput;
+    total = examInput; // لا نعرض خانة TD ونحسب النتيجة بناءً على الامتحان فقط
   } else {
-    const weightedTd = tdInput * 0.4;
-    const weightedExam = examInput * 0.6;
-    total = weightedTd + weightedExam;
+    // في باقي المواد نقوم بحساب المجموع المعدل
+    const weightedTd = tdInput * 0.4; // ضرب TD في 0.4
+    const weightedExam = examInput * 0.6; // ضرب الامتحان في 0.6
+    total = weightedTd + weightedExam; // حساب المجموع
   }
 
-  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2);
+  row.querySelector('td:nth-child(5)').textContent = total.toFixed(2); // عرض المجموع في العمود الجديد
 
+  // حساب النتيجة بضرب المجموع في المعامل
   result = total * coefficient;
-  row.querySelector('td:nth-child(6)').textContent = result.toFixed(2);
+  row.querySelector('td:nth-child(6)').textContent = result.toFixed(2); // عرض النتيجة في العمود الأخير
 
-  // تغيير اللون بناءً على النتيجة
-  const resultCell = row.querySelector('td:nth-child(6)');
-  if (result < 10) {
-    resultCell.classList.add('result-low');
-    resultCell.classList.remove('result-high');
-  } else {
-    resultCell.classList.add('result-high');
-    resultCell.classList.remove('result-low');
-  }
-
+  // تحديث المعدل النهائي
   updateAverage();
 }
 
@@ -38,22 +51,25 @@ function updateAverage() {
   let sumOfResults = 0;
   const rows = document.querySelectorAll('tr');
   rows.forEach(row => {
-    const totalCell = row.querySelector('td:nth-child(6)');
+    const totalCell = row.querySelector('td:nth-child(6)'); // الحصول على خانة المجموع
     if (totalCell && totalCell.textContent) {
       sumOfResults += parseFloat(totalCell.textContent);
     }
   });
 
-  const average = sumOfResults / 17;
+  // حساب المعدل النهائي
+  const average = sumOfResults / 17; // قسمنا المجموع على 17
   const averageCell = document.getElementById('average-cell');
   averageCell.textContent = `المعدل النهائي: ${average.toFixed(2)}`;
-
-  // تغيير لون المعدل النهائي
-  if (average < 10) {
-    averageCell.classList.add('final-average-low');
-    averageCell.classList.remove('final-average-high');
-  } else {
-    averageCell.classList.add('final-average-high');
-    averageCell.classList.remove('final-average-low');
-  }
 }
+
+window.onload = function () {
+  // حذف خانة TD للمادتين الإعلام الآلي و مدخل لادارة الاعمال
+  const rows = document.querySelectorAll('tr');
+  rows.forEach(row => {
+    const subject = row.querySelector('td:nth-child(1)').textContent;
+    if (subject.includes('الإعلام الآلي') || subject.includes('مدخل لادارة الاعمال')) {
+      row.querySelector('td:nth-child(3)').innerHTML = ''; // إزالة خانة TD
+    }
+  });
+};
