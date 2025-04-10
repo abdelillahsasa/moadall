@@ -3,23 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>See You Again</title>
-  <link rel="stylesheet" href="style.css"> <!-- تأكد أن اسم ملف CSS هو نفسه الموجود هنا -->
+  <link rel="stylesheet" href="style.css"> <!-- تأكد من اسم ملف CSS -->
   <style>
     .center-message {
       display: flex;
       align-items: center;
       justify-content: center;
       height: 80vh;
-      font-size: 24px;
+    }
+
+    .message-box {
+      background-color: #ffffff;
+      border: 3px solid #4CAF50;
+      border-radius: 16px;
+      padding: 40px 60px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      font-size: 32px;
+      font-weight: bold;
       color: #4CAF50;
       text-align: center;
-      font-weight: bold;
+      max-width: 90%;
     }
   </style>
 </head>
 <body>
   <div class="center-message">
-    See you in other projects on other days. Thank you!
+    <div class="message-box">
+      See you in other projects on other days. Thank you!
+    </div>
   </div>
 </body>
 </html>
