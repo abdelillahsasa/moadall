@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <title>moadall</title>
   <link rel="stylesheet" href="style.css"> <!-- تأكد من اسم ملف CSS -->
+ 
+  <script>
+  const navType = performance.getEntriesByType("navigation")[0]?.type;
+
+  const isRefresh = navType === 'reload';
+  const isFirstVisit = !sessionStorage.getItem('loadingShown');
+
+  if (isRefresh || isFirstVisit) {
+    // نحفظ الصفحة الحالية للرجوع إليها بعد التحميل
+    sessionStorage.setItem('loadingShown', 'true');
+    sessionStorage.setItem('redirectBackTo', window.location.pathname);
+    window.location.href = 'loading.html';
+  }
+</script>
+
+  
   <style>
     .center-message {
       display: flex;
