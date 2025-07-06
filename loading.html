@@ -31,7 +31,7 @@
 		
     } 
 
-	  bg-video {
+	  .bg-video {
   position: fixed;
   top: 0;
   left: 0;
@@ -40,14 +40,13 @@
   object-fit: cover;
   z-index: -1;
   pointer-events: none;
-  opacity: 3; /* إخفاء مؤقت */
-  animation: showVideo 3s forwards;
+  background-color: transparent; /* مهم */
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in forwards;
 }
 
-@keyframes showVideo {
-  to {
-    opacity: 3;
-  }
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 	  
 	  
