@@ -46,7 +46,12 @@
 	  const video = document.getElementById("introVideo"); //الاصل
     const preloader = document.getElementById("preloader");
     const content = document.getElementById("main-content");
-	   
+
+// عندما يكون الفيديو جاهزًا للتشغيل
+  video.addEventListener('canplaythrough', () => {
+    video.style.display = 'block'; // نعرض الفيديو بعد ما يصبح جاهز
+  });
+	  
     // الانتقال إلى main.html بعد نهاية الفيديو
     video.onended = () => {
       window.location.href = 'index.html';
