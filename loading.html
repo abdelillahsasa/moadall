@@ -30,6 +30,26 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 		
     } 
+
+	  .bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0; /* إخفاء مؤقت */
+  animation: showVideo 0.2s forwards;
+}
+
+@keyframes showVideo {
+  to {
+    opacity: 1;
+  }
+}
+	  
 	  
 	
 	  
@@ -37,7 +57,7 @@
 </head>
 <body>
 
-  <video autoplay muted playsinline id="loading-video">
+  <video autoplay muted playsinline id="loading-video" class"bg-video">
     <source src="mee.webm" type="video/webm">
     متصفحك لا يدعم تشغيل الفيديو.
   </video>
