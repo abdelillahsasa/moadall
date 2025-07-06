@@ -63,5 +63,34 @@
     }, 5000);
   </script>
 
+	<canvas id="canvas"></canvas>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  // اضبط حجم الكانفس
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // أنشئ عنصر فيديو دون إضافته للصفحة
+  const video = document.createElement('video');
+  video.src = 'your-video.webm';
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+
+  video.addEventListener('play', function () {
+    function drawFrame() {
+      if (!video.paused && !video.ended) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(drawFrame);
+      }
+    }
+    drawFrame();
+  });
+</script>
+	
 </body>
 </html>
