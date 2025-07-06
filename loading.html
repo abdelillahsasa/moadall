@@ -31,7 +31,7 @@
 		
     } 
 
-	  bg-video {
+	  .bg-video {
   position: fixed;
   top: 0;
   left: 0;
@@ -40,10 +40,7 @@
   object-fit: cover;
   z-index: -1;
   pointer-events: none;
-  background-color: transparent; /* مهم */
-  opacity: 0;
-  animation: fadeIn 0.3s ease-in forwards;
-}
+  background-color: transparent;
 
 @keyframes fadeIn {
   to { opacity: 1; }
@@ -56,7 +53,7 @@
 </head>
 <body>
 
-  <video autoplay muted playsinline id="loading-video" class="bg-video">
+  <video class="bg-video" autoplay muted playsinline preload="auto">
     <source src="mee.webm" type="video/webm">
     متصفحك لا يدعم تشغيل الفيديو.
   </video>
