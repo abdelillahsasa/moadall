@@ -2,68 +2,215 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
-  <title>loading...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جاري التحميل...</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
+    
     html, body {
       height: 100%;
       width: 100%;
-      background: linear-gradient(135deg, #e6f7e6, #d1f7d1); /* استخدام اللون الأخضر الفاتح */
+      background: linear-gradient(135deg, #e6f7e6, #d1f7d1, #b8f0b8);
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
+    
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    
     video {
-      max-width: 90vw;
-      max-height: 90vh;
+      max-width: 80vw;
+      max-height: 60vh;
       width: auto;
       height: auto;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-		
-    } 
-
-	
-	  
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+    
+    video:hover {
+      transform: scale(1.05);
+    }
+    
+    .loading-text {
+      color: #2d6a2d;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 20px;
+      animation: pulse 2s infinite;
+    }
+    
+    .progress-bar {
+      width: 300px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #81C784);
+      border-radius: 2px;
+      animation: progressAnimation 5s linear;
+    }
+    
+    .dots {
+      display: inline-block;
+      animation: dots 1.5s infinite;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+    
+    @keyframes progressAnimation {
+      from {
+        width: 0%;
+      }
+      to {
+        width: 100%;
+      }
+    }
+    
+    @keyframes dots {
+      0%, 20% {
+        color: transparent;
+        text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
+      }
+      40% {
+        color: #2d6a2d;
+        text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
+      }
+      60% {
+        text-shadow: 0.25em 0 0 #2d6a2d, 0.5em 0 0 transparent;
+      }
+      80%, 100% {
+        text-shadow: 0.25em 0 0 #2d6a2d, 0.5em 0 0 #2d6a2d;
+      }
+    }
+    
+    /* تحسينات للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .loading-text {
+        font-size: 1.2rem;
+      }
+      
+      .progress-bar {
+        width: 250px;
+      }
+      
+      video {
+        max-width: 90vw;
+        max-height: 50vh;
+      }
+    }
+    
+    /* تأثير التلاشي عند المغادرة */
+    .fade-out {
+      animation: fadeOut 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
-	
-
-  <vide class="bg-video" autoplay muted playsinline preload="auto">
-    <source src="mee.webm" type="video/webm">
+  <div class="loading-container" id="loadingContainer">
+    <video autoplay muted playsinline loop id="loading-video">
+      <source src="mee.webm" type="video/webm">
+      <source src="mee.mp4" type="video/mp4">
+      متصفحك لا يدعم تشغيل الفيديو.
+    </video>
     
-  </video>
+    <div class="loading-text">
+      جاري التحميل<span class="dots">...</span>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+  </div>
 
   <script>
-	  const video = document.getElementById("introVideo"); //الاصل
-    const preloader = document.getElementById("preloader");
-    const content = document.getElementById("main-content");
-const video = document.getElementById('bg-video');
-	
-// عندما يكون الفيديو جاهزًا للتشغيل
-  video.addEventListener('canplaythrough', () => {
-    video.style.display = 'block'; // نعرض الفيديو بعد ما يصبح جاهز
-  });
-	  
-    // الانتقال إلى main.html بعد نهاية الفيديو
-    video.onended = () => {
-      window.location.href = 'index.html';
-    };
-
-    // كخطة بديلة (5 ثواني)
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 5000);
+    const video = document.getElementById('loading-video');
+    const loadingContainer = document.getElementById('loadingContainer');
+    let redirected = false;
+    
+    // وظيفة الانتقال مع تأثير التلاشي
+    function redirectToMain() {
+      if (redirected) return;
+      redirected = true;
+      
+      loadingContainer.classList.add('fade-out');
+      
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 500);
+    }
+    
+    // التحقق من تحميل الفيديو
+    video.addEventListener('loadeddata', () => {
+      console.log('تم تحميل الفيديو بنجاح');
+    });
+    
+    // معالجة أخطاء تحميل الفيديو
+    video.addEventListener('error', (e) => {
+      console.error('خطأ في تحميل الفيديو:', e);
+      // الانتقال فوراً في حالة الخطأ
+      setTimeout(redirectToMain, 1000);
+    });
+    
+    // الانتقال بعد انتهاء الفيديو (إذا لم يكن مُكرر)
+    video.addEventListener('ended', redirectToMain);
+    
+    // خطة بديلة - الانتقال بعد 5 ثوانٍ
+    setTimeout(redirectToMain, 5000);
+    
+    // منع النقر بالزر الأيمن والسحب
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    
+    // إضافة مؤثرات صوتية (اختيارية)
+    document.addEventListener('click', () => {
+      // يمكنك إضافة تأثيرات صوتية هنا
+    });
   </script>
-
 </body>
 </html>
