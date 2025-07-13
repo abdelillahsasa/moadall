@@ -1,106 +1,70 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>جاري التحميل...</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(135deg, #e6f7e6, #d1f7d1, #b8f0b8);
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    video {
-      max-width: 80vw;
-      max-height: 60vh;
-      width: auto;
-      height: auto;
-    }
-
-
-
-
-    
-    /* تحسينات للشاشات الصغيرة */
-    @media (max-width: 768px) {
-      video {
-        max-width: 90vw;
-        max-height: 50vh;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>loading...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(135deg, #e6f7e6, #d1f7d1); /* استخدام اللون الأخضر الفاتح */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        video {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            pointer-events: none; /* منع التفاعل مع الفيديو */
+        }
+        
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+        
+        video::-webkit-media-controls-panel {
+            display: none !important;
+        }
+        
+        video::-webkit-media-controls-play-button {
+            display: none !important;
+        }
+        
+        video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-  <div class="loading-container" id="loadingContainer">
-    <video autoplay muted playsinline id="loading-video">
-      <source src="mee.webm" type="video/webm">
-      <source src="mee.mp4" type="video/mp4">
-      متصفحك لا يدعم تشغيل الفيديو.
+    <video autoplay muted playsinline controls="false" controlslist="nodownload nofullscreen noremoteplayback" disablepictureinpicture id="loading-video">
+        <source src="mee.webm" type="video/webm">
+        متصفحك لا يدعم تشغيل الفيديو.
     </video>
     
-
-  </div>
-
-  <script>
-    const video = document.getElementById('loading-video');
-    const loadingContainer = document.getElementById('loadingContainer');
-    
-    // التحقق من localStorage لمعرفة إذا كان الفيديو تم تشغيله من قبل
-    const hasPlayedBefore = sessionStorage.getItem('videoPlayed');
-    
-    if (hasPlayedBefore) {
-      // إذا تم تشغيل الفيديو من قبل، انتقل مباشرة للصفحة الرئيسية
-      window.location.href = 'index.html';
-    } else {
-      // تشغيل الفيديو لأول مرة
-      video.addEventListener('loadeddata', () => {
-        console.log('تم تحميل الفيديو بنجاح');
-      });
-      
-      // معالجة أخطاء تحميل الفيديو
-      video.addEventListener('error', (e) => {
-        console.error('خطأ في تحميل الفيديو:', e);
-        window.location.href = 'index.html';
-      });
-      
-      // الانتقال بعد انتهاء الفيديو
-      video.addEventListener('ended', () => {
-        video.pause(); // إيقاف الفيديو نهائياً
-        sessionStorage.setItem('videoPlayed', 'true'); // تسجيل أن الفيديو تم تشغيله
+    <script>
+        const video = document.getElementById('loading-video');
+        
+        // الانتقال إلى main.html بعد نهاية الفيديو
+        video.onended = () => {
+            window.location.href = 'index.html';
+        };
+        
+        // كخطة بديلة (5 ثواني)
         setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 500);
-      });
-      
-      // خطة بديلة - الانتقال بعد 10 ثوانٍ
-      setTimeout(() => {
-        console.log('انتهت المدة المحددة، سيتم الانتقال الآن');
-        sessionStorage.setItem('videoPlayed', 'true');
-        window.location.href = 'index.html';
-      }, 10000);
-    }
-    
-    // منع النقر بالزر الأيمن والسحب
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('dragstart', (e) => e.preventDefault());
-  </script>
+            window.location.href = 'index.html';
+        }, 5000);
+    </script>
 </body>
 </html>
