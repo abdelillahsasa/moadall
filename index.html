@@ -1,70 +1,53 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <title>loading...</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html, body {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(135deg, #e6f7e6, #d1f7d1); /* استخدام اللون الأخضر الفاتح */
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        video {
-            max-width: 90vw;
-            max-height: 90vh;
-            width: auto;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            pointer-events: none; /* منع التفاعل مع الفيديو */
-        }
-        
-        video::-webkit-media-controls {
-            display: none !important;
-        }
-        
-        video::-webkit-media-controls-panel {
-            display: none !important;
-        }
-        
-        video::-webkit-media-controls-play-button {
-            display: none !important;
-        }
-        
-        video::-webkit-media-controls-start-playback-button {
-            display: none !important;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>loading...</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(135deg, 
+#e6f7e6, 
+#d1f7d1); /* استخدام اللون الأخضر الفاتح */
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    video {
+      max-width: 90vw;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+
+    } 
+
+  </style>
 </head>
 <body>
-    <video autoplay muted playsinline controls="false" controlslist="nodownload nofullscreen noremoteplayback" disablepictureinpicture id="loading-video">
-        <source src="mee.webm" type="video/webm">
-        متصفحك لا يدعم تشغيل الفيديو.
-    </video>
-    
-    <script>
-        const video = document.getElementById('loading-video');
-        
-        // الانتقال إلى main.html بعد نهاية الفيديو
-        video.onended = () => {
-            window.location.href = 'index.html';
-        };
-        
-        // كخطة بديلة (5 ثواني)
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 5000);
-    </script>
+  <video autoplay muted playsinline id="loading-video">
+    <source src="mee.webm" type="video/webm">
+    متصفحك لا يدعم تشغيل الفيديو.
+  </video>
+  <script>
+
+      const video = document.getElementById('loading-video');
+
+    // الانتقال إلى main.html بعد نهاية الفيديو
+    video.onended = () => {
+      window.location.href = 'index.html';
+    };
+    // كخطة بديلة (5 ثواني)
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 5000);
+  </script>
 </body>
-</html>
