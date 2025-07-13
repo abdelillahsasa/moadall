@@ -68,6 +68,7 @@
     function redirectToMain() {
       if (redirected) return;
       redirected = true;
+      console.log('سيتم الانتقال إلى index.html');
       window.location.href = 'index.html';
     }
     
@@ -86,11 +87,16 @@
     // الانتقال بعد انتهاء الفيديو مع إيقاف الفيديو
     video.addEventListener('ended', () => {
       video.pause(); // إيقاف الفيديو نهائياً
-      redirectToMain();
+      setTimeout(() => {
+        redirectToMain();
+      }, 500); // انتظار نصف ثانية قبل الانتقال
     });
     
-    // خطة بديلة - الانتقال بعد 5 ثوانٍ
-    setTimeout(redirectToMain, 5000);
+    // خطة بديلة - الانتقال بعد 10 ثوانٍ (زيادة المدة)
+    setTimeout(() => {
+      console.log('انتهت المدة المحددة، سيتم الانتقال الآن');
+      redirectToMain();
+    }, 10000);
     
     // منع النقر بالزر الأيمن والسحب
     document.addEventListener('contextmenu', (e) => e.preventDefault());
