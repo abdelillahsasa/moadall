@@ -1,52 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>moadall</title>
-  <link rel="stylesheet" href="style.css"> <!-- تأكد من اسم ملف CSS -->
- 
-  <script>
-  const navType = performance.getEntriesByType("navigation")[0]?.type;
-
-  const isRefresh = navType === 'reload';
-  const isFirstVisit = !sessionStorage.getItem('loadingShown');
-
-  if (isRefresh || isFirstVisit) {
-    // نحفظ الصفحة الحالية للرجوع إليها بعد التحميل
-    sessionStorage.setItem('loadingShown', 'true');
-    sessionStorage.setItem('redirectBackTo', window.location.pathname);
-    window.location.href = 'loading.html';
-  }
-</script>
-
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جاري التحميل...</title>
   <style>
-    .center-message {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(135deg, #e6f7e6, #d1f7d1, #b8f0b8);
+      overflow: hidden;
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 80vh;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    video {
+      max-width: 80vw;
+      max-height: 60vh;
+      width: auto;
+      height: auto;
     }
 
-    .message-box {
-      background-color: #ffffff;
-      border: 3px solid #4CAF50;
-      border-radius: 16px;
-      padding: 40px 60px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      font-size: 32px;
-      font-weight: bold;
-      color: #4CAF50;
-      text-align: center;
-      max-width: 90%;
+
+
+
+    
+    /* تحسينات للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      video {
+        max-width: 90vw;
+        max-height: 50vh;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="center-message">
-    <div class="message-box">
-      out of order.
-    </div>
+  <div class="loading-container" id="loadingContainer">
+    <video autoplay muted playsinline id="loading-video">
+      <source src="mee.webm" type="video/webm">
+      <source src="mee.mp4" type="video/mp4">
+      متصفحك لا يدعم تشغيل الفيديو.
+    </video>
+    
+
   </div>
+
+  <script>
+    const video = document.getElementById('loading-video');
+    const loadingContainer = document.getElementById('loadingContainer');
+    let redirected = false;
+    
+    // وظيفة الانتقال بدون تأثيرات
+    function redirectToMain() {
+      if (redirected) return;
+      redirected = true;
+      window.location.href = 'index.html';
+    }
+    
+    // التحقق من تحميل الفيديو
+    video.addEventListener('loadeddata', () => {
+      console.log('تم تحميل الفيديو بنجاح');
+    });
+    
+    // معالجة أخطاء تحميل الفيديو
+    video.addEventListener('error', (e) => {
+      console.error('خطأ في تحميل الفيديو:', e);
+      // الانتقال فوراً في حالة الخطأ
+      setTimeout(redirectToMain, 1000);
+    });
+    
+    // الانتقال بعد انتهاء الفيديو مع إيقاف الفيديو
+    video.addEventListener('ended', () => {
+      video.pause(); // إيقاف الفيديو نهائياً
+      redirectToMain();
+    });
+    
+    // خطة بديلة - الانتقال بعد 5 ثوانٍ
+    setTimeout(redirectToMain, 5000);
+    
+    // منع النقر بالزر الأيمن والسحب
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    
+    // إضافة مؤثرات صوتية (اختيارية)
+    document.addEventListener('click', () => {
+      // يمكنك إضافة تأثيرات صوتية هنا
+    });
+  </script>
 </body>
 </html>
