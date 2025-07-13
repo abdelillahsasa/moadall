@@ -26,7 +26,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      animation: fadeIn 1s ease-in-out;
     }
     
     video {
@@ -34,25 +33,10 @@
       max-height: 60vh;
       width: auto;
       height: auto;
-      border-radius: 15px;
-      transition: transform 0.3s ease;
-    }
-    
-    video:hover {
-      transform: scale(1.05);
     }
 
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+
+
 
     
     /* تحسينات للشاشات الصغيرة */
@@ -60,20 +44,6 @@
       video {
         max-width: 90vw;
         max-height: 50vh;
-      }
-    }
-    
-    /* تأثير التلاشي عند المغادرة */
-    .fade-out {
-      animation: fadeOut 0.5s ease-in-out;
-    }
-    
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
       }
     }
   </style>
@@ -94,16 +64,11 @@
     const loadingContainer = document.getElementById('loadingContainer');
     let redirected = false;
     
-    // وظيفة الانتقال مع تأثير التلاشي
+    // وظيفة الانتقال بدون تأثيرات
     function redirectToMain() {
       if (redirected) return;
       redirected = true;
-      
-      loadingContainer.classList.add('fade-out');
-      
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 500);
+      window.location.href = 'index.html';
     }
     
     // التحقق من تحميل الفيديو
