@@ -62,50 +62,45 @@
   <script>
     const video = document.getElementById('loading-video');
     const loadingContainer = document.getElementById('loadingContainer');
-    let redirected = false;
     
-    // وظيفة الانتقال بدون تأثيرات
-    function redirectToMain() {
-      if (redirected) return;
-      redirected = true;
-      console.log('سيتم الانتقال إلى index.html');
+    // التحقق من localStorage لمعرفة إذا كان الفيديو تم تشغيله من قبل
+    const hasPlayedBefore = sessionStorage.getItem('videoPlayed');
+    
+    if (hasPlayedBefore) {
+      // إذا تم تشغيل الفيديو من قبل، انتقل مباشرة للصفحة الرئيسية
       window.location.href = 'index.html';
-    }
-    
-    // التحقق من تحميل الفيديو
-    video.addEventListener('loadeddata', () => {
-      console.log('تم تحميل الفيديو بنجاح');
-    });
-    
-    // معالجة أخطاء تحميل الفيديو
-    video.addEventListener('error', (e) => {
-      console.error('خطأ في تحميل الفيديو:', e);
-      // الانتقال فوراً في حالة الخطأ
-      setTimeout(redirectToMain, 1000);
-    });
-    
-    // الانتقال بعد انتهاء الفيديو مع إيقاف الفيديو
-    video.addEventListener('ended', () => {
-      video.pause(); // إيقاف الفيديو نهائياً
+    } else {
+      // تشغيل الفيديو لأول مرة
+      video.addEventListener('loadeddata', () => {
+        console.log('تم تحميل الفيديو بنجاح');
+      });
+      
+      // معالجة أخطاء تحميل الفيديو
+      video.addEventListener('error', (e) => {
+        console.error('خطأ في تحميل الفيديو:', e);
+        window.location.href = 'index.html';
+      });
+      
+      // الانتقال بعد انتهاء الفيديو
+      video.addEventListener('ended', () => {
+        video.pause(); // إيقاف الفيديو نهائياً
+        sessionStorage.setItem('videoPlayed', 'true'); // تسجيل أن الفيديو تم تشغيله
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 500);
+      });
+      
+      // خطة بديلة - الانتقال بعد 10 ثوانٍ
       setTimeout(() => {
-        redirectToMain();
-      }, 500); // انتظار نصف ثانية قبل الانتقال
-    });
-    
-    // خطة بديلة - الانتقال بعد 10 ثوانٍ (زيادة المدة)
-    setTimeout(() => {
-      console.log('انتهت المدة المحددة، سيتم الانتقال الآن');
-      redirectToMain();
-    }, 10000);
+        console.log('انتهت المدة المحددة، سيتم الانتقال الآن');
+        sessionStorage.setItem('videoPlayed', 'true');
+        window.location.href = 'index.html';
+      }, 10000);
+    }
     
     // منع النقر بالزر الأيمن والسحب
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('dragstart', (e) => e.preventDefault());
-    
-    // إضافة مؤثرات صوتية (اختيارية)
-    document.addEventListener('click', () => {
-      // يمكنك إضافة تأثيرات صوتية هنا
-    });
   </script>
 </body>
 </html>
